@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Undangan Pernikahan – Vigra & Noviana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --pink:#c8929a;
+  --pink-light:#e8b4bc;
+  --pink-pale:#f5dce0;
+  --pink-deep:#a06878;
+  --rose:#d4a0a8;
+  --cream:#fdf6f0;
+  --cream2:#f7ece4;
+  --brown:#5c3020;
+  --brown2:#7a4030;
+  --gold:#c4954a;
+  --gold2:#deb878;
+  --gold-pale:#f0d8a8;
+  --text:#3d1a10;
+  --text2:#7a4030;
+  --text3:#b08060;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--text);font-family:'Cormorant Garamond',Georgia,serif;overflow-x:hidden;}
+
+/* ── GATE / ENVELOPE ── */
+#gate{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--brown);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:40px 24px;
+  transition:opacity 0.8s ease, transform 0.8s ease;
+}
+#gate.opening{opacity:0;transform:scale(1.04);pointer-events:none;}
+.gate-names{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(32px,8vw,60px);
+  color:#fdf6f0;font-weight:600;line-height:1.1;
+}
+.gate-amp{font-style:italic;color:var(--pink-light);display:block;font-size:0.7em;}
+.gate-sub{font-size:13px;letter-spacing:3px;color:rgba(253,246,240,0.6);text-transform:uppercase;margin-top:14px;}
+.gate-btn{
+  margin-top:36px;
+  background:transparent;border:1px solid var(--pink-light);
+  color:var(--pink-pale);
+  font-family:'Cormorant Garamond',serif;
+  font-size:14px;letter-spacing:3px;text-transform:uppercase;
+  padding:14px 40px;cursor:pointer;
+  transition:background 0.2s,color 0.2s;
+}
+.gate-btn:hover{background:var(--pink-light);color:var(--brown);}
+.gate-ornament{color:var(--pink-light);font-size:22px;margin-bottom:20px;opacity:0.7;}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  background:rgba(92,48,32,0.95);backdrop-filter:blur(8px);
+  display:flex;justify-content:center;gap:28px;
+  padding:13px 24px;z-index:500;
+  border-bottom:1px solid rgba(200,146,154,0.25);
+  transform:translateY(-100%);transition:transform 0.3s;
+}
+nav.show{transform:translateY(0);}
+nav a{color:var(--pink-pale);text-decoration:none;font-size:11px;letter-spacing:3px;text-transform:uppercase;opacity:0.8;transition:opacity 0.2s;}
+nav a:hover{opacity:1;}
+
+/* ── COVER ── */
+.cover{
+  min-height:100vh;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:80px 24px 60px;
+}
+.cover-bg{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(180deg, rgba(92,48,32,0.78) 0%, rgba(92,48,32,0.55) 50%, rgba(92,48,32,0.8) 100%);
+  z-index:1;
+}
+/* SVG kraton background */
+.cover-scene{position:absolute;inset:0;z-index:0;}
+.cover-content{position:relative;z-index:2;}
+
+.cover-eyebrow{
+  font-size:11px;letter-spacing:5px;text-transform:uppercase;
+  color:var(--pink-light);margin-bottom:24px;opacity:0.85;
+}
+.bismillah-cover{
+  font-size:clamp(18px,4vw,26px);color:var(--gold-pale);
+  margin-bottom:8px;font-family:serif;direction:rtl;
+}
+.cover-divider{
+  width:120px;height:1px;background:var(--pink-light);
+  margin:20px auto;opacity:0.5;
+}
+.cover-names{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(44px,11vw,82px);
+  color:#fdf6f0;font-weight:600;line-height:1.05;letter-spacing:2px;
+}
+.cover-amp{
+  font-style:italic;color:var(--pink-light);
+  display:block;font-size:clamp(32px,8vw,60px);line-height:1.25;
+}
+.cover-date{
+  margin-top:28px;font-size:14px;letter-spacing:3px;
+  color:var(--pink-pale);text-transform:uppercase;
+}
+.scroll-hint{
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  color:var(--pink-pale);font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  opacity:0.6;display:flex;flex-direction:column;align-items:center;gap:6px;
+  animation:bob 2s infinite;
+}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(5px);}}
+
+/* ── AYAT ── */
+.verse-sec{
+  background:var(--brown);padding:64px 32px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.verse-sec::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(200,146,154,0.1) 0%,transparent 70%);
+  pointer-events:none;
+}
+.arabic-big{
+  font-size:clamp(20px,4vw,30px);line-height:2;
+  color:var(--gold-pale);margin-bottom:18px;
+  direction:rtl;font-family:serif;
+}
+.verse-trans{
+  font-size:15px;line-height:1.9;color:rgba(253,246,240,0.78);
+  font-style:italic;max-width:480px;margin:0 auto 12px;font-weight:300;
+}
+.verse-ref{font-size:10px;letter-spacing:3px;color:var(--pink-light);text-transform:uppercase;opacity:0.75;}
+
+/* ── SECTIONS ── */
+.sec{padding:72px 24px;max-width:700px;margin:0 auto;text-align:center;}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink-deep);margin-bottom:14px;display:block;}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(24px,5vw,34px);color:var(--brown);font-weight:600;margin-bottom:18px;}
+.sec-body{font-size:17px;line-height:1.9;color:var(--text2);font-weight:300;}
+
+/* ── COUPLE ── */
+.couple-wrap{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:center;margin:36px 0;}
+.person{padding:20px 12px;text-align:center;}
+.avatar-ring{
+  width:110px;height:110px;border-radius:50%;
+  border:2px solid var(--pink);
+  margin:0 auto 16px;overflow:hidden;
+  background:var(--cream2);
+  display:flex;align-items:center;justify-content:center;
+}
+.person-name{font-family:'Playfair Display',serif;font-size:15px;color:var(--brown);font-weight:600;display:block;margin-bottom:4px;line-height:1.3;}
+.person-parent{font-size:13px;color:var(--text3);font-style:italic;line-height:1.7;}
+.center-amp{font-family:'Playfair Display',serif;font-size:52px;font-style:italic;color:var(--pink);padding:0 8px;}
+
+/* ── EVENT CARDS ── */
+.events{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:32px;}
+.ecard{
+  border:1px solid var(--pink-pale);padding:28px 20px;
+  background:#fff;position:relative;text-align:left;
+}
+.ecard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--pink);}
+.etype{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--pink-deep);margin-bottom:10px;display:block;}
+.ename{font-family:'Playfair Display',serif;font-size:19px;color:var(--brown);font-weight:600;margin-bottom:16px;}
+.erow{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;}
+.eicon{color:var(--pink);margin-top:2px;flex-shrink:0;}
+.etext{font-size:14px;line-height:1.6;color:var(--text2);}
+.etext strong{display:block;font-weight:500;color:var(--brown);font-size:15px;}
+
+/* ── COUNTDOWN ── */
+.countdown-sec{background:var(--cream2);padding:64px 24px;text-align:center;}
+.count-grid{display:flex;justify-content:center;gap:16px;margin-top:32px;flex-wrap:wrap;}
+.cbox{background:var(--brown);color:var(--cream);width:86px;padding:14px 8px;text-align:center;}
+.cnum{font-family:'Playfair Display',serif;font-size:34px;font-weight:600;color:var(--pink-light);display:block;line-height:1;}
+.clbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(253,246,240,0.65);margin-top:5px;display:block;}
+
+/* ── LOKASI ── */
+.loc-sec{padding:72px 24px;max-width:700px;margin:0 auto;text-align:center;}
+.map-btn{
+  display:block;background:var(--cream2);border:1px solid var(--pink-pale);
+  height:200px;margin:24px 0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;color:var(--text3);text-decoration:none;
+  transition:background 0.2s;
+}
+.map-btn:hover{background:#eedbd8;}
+.address-box{
+  background:#fff;border:1px solid var(--pink-pale);padding:20px 24px;
+  margin:16px 0;text-align:left;font-size:15px;line-height:1.8;color:var(--text2);
+}
+.btn-main{
+  display:inline-block;background:var(--brown);color:var(--cream);
+  padding:13px 34px;font-family:'Cormorant Garamond',serif;
+  font-size:13px;letter-spacing:3px;text-transform:uppercase;
+  text-decoration:none;margin-top:8px;border:none;cursor:pointer;
+  transition:background 0.2s,transform 0.15s;
+}
+.btn-main:hover{background:var(--brown2);transform:translateY(-1px);}
+
+/* ── RSVP & UCAPAN ── */
+.rsvp-sec{background:var(--brown);padding:72px 24px;text-align:center;}
+.rsvp-sec .sec-title{color:var(--cream);}
+.rsvp-sec .sec-body{color:rgba(253,246,240,0.72);}
+.rform{max-width:440px;margin:32px auto 0;display:flex;flex-direction:column;gap:14px;}
+.rinput{
+  background:rgba(253,246,240,0.07);border:1px solid rgba(200,146,154,0.4);
+  color:var(--cream);font-family:'Cormorant Garamond',serif;
+  font-size:16px;padding:13px 16px;width:100%;outline:none;
+  transition:border-color 0.2s;
+}
+.rinput:focus{border-color:var(--pink-light);}
+.rinput::placeholder{color:rgba(253,246,240,0.38);}
+.rsel{
+  background:rgba(253,246,240,0.07);border:1px solid rgba(200,146,154,0.4);
+  color:var(--cream);font-family:'Cormorant Garamond',serif;
+  font-size:16px;padding:13px 16px;width:100%;outline:none;cursor:pointer;
+  appearance:none;-webkit-appearance:none;
+}
+.rsel option{background:var(--brown);color:var(--cream);}
+.rsuccess{
+  display:none;background:rgba(200,146,154,0.15);
+  border:1px solid var(--pink);padding:18px;margin-top:8px;
+  color:var(--pink-pale);font-size:15px;line-height:1.7;
+}
+.wishes{
+  max-width:520px;margin:28px auto 0;
+  display:flex;flex-direction:column;gap:12px;
+  max-height:300px;overflow-y:auto;text-align:left;
+}
+.witem{
+  background:rgba(253,246,240,0.06);border-left:2px solid var(--pink);
+  padding:13px 16px;color:rgba(253,246,240,0.82);font-size:15px;line-height:1.7;
+}
+.wname{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--pink-light);margin-bottom:4px;display:block;}
+
+/* ── FOOTER ── */
+footer{
+  background:#3a1808;color:rgba(253,246,240,0.45);
+  text-align:center;padding:32px 24px;
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;
+}
+
+/* ── MUSIC BTN ── */
+.music-btn{
+  position:fixed;bottom:24px;right:24px;
+  width:46px;height:46px;border-radius:50%;
+  background:var(--brown);border:1.5px solid var(--pink);
+  color:var(--pink-pale);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:400;font-size:18px;
+  transition:transform 0.2s;box-shadow:0 2px 12px rgba(92,48,32,0.3);
+}
+.music-btn:hover{transform:scale(1.1);}
+
+/* ── SEPARATOR ── */
+.sep{border:none;border-top:1px solid var(--pink-pale);margin:0;}
+
+/* ── FADE ── */
+.fade{opacity:0;transform:translateY(20px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.fade.in{opacity:1;transform:translateY(0);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:520px){
+  .events{grid-template-columns:1fr;}
+  .couple-wrap{grid-template-columns:1fr;grid-template-rows:auto auto auto;}
+  .center-amp{font-size:36px;}
+  nav{gap:16px;}
+  nav a{font-size:9px;letter-spacing:2px;}
+}
+
+/* ── BATIK PATTERN ── */
+.batik-wrap{position:absolute;inset:0;opacity:0.06;pointer-events:none;overflow:hidden;}
+
+/* ── ORNAMENTAL DIVIDER ── */
+.orn-div{display:flex;align-items:center;justify-content:center;gap:12px;padding:6px 0;}
+.orn-div::before,.orn-div::after{content:'';height:1px;width:70px;}
+.orn-div::before{background:linear-gradient(to right,transparent,var(--pink));}
+.orn-div::after{background:linear-gradient(to left,transparent,var(--pink));}
+.orn-diamond{width:8px;height:8px;background:var(--pink);transform:rotate(45deg);}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="batik-wrap">
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="bp2" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+          <circle cx="40" cy="40" r="28" fill="none" stroke="#c8929a" stroke-width="0.7"/>
+          <circle cx="40" cy="40" r="14" fill="none" stroke="#c8929a" stroke-width="0.4"/>
+          <circle cx="40" cy="40" r="3" fill="#c8929a"/>
+          <line x1="40" y1="12" x2="40" y2="68" stroke="#c8929a" stroke-width="0.3"/>
+          <line x1="12" y1="40" x2="68" y2="40" stroke="#c8929a" stroke-width="0.3"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#bp2)"/>
+    </svg>
+  </div>
+  <div style="position:relative;z-index:1;">
+    <div class="gate-ornament">✦ ✦ ✦</div>
+    <div style="font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(232,180,188,0.7);margin-bottom:20px;">Undangan Pernikahan</div>
+    <div class="gate-names">
+      VIGRA EKA<br>YONGKI PRAMANA
+      <span class="gate-amp">&</span>
+      NOVIANA FAJARINI
+    </div>
+    <div class="gate-sub">Sabtu, 18 Juli 2026</div>
+    <button class="gate-btn" onclick="openInvite()">✦ Buka Undangan ✦</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#mempelai">Mempelai</a>
+  <a href="#acara">Acara</a>
+  <a href="#lokasi">Lokasi</a>
+  <a href="#ucapan">Ucapan</a>
+</nav>
+
+<!-- COVER -->
+<section class="cover" id="top">
+  <!-- Kraton / Temple SVG Background Scene -->
+  <svg class="cover-scene" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <!-- Sky gradient -->
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1a0a2e"/>
+        <stop offset="50%" stop-color="#3d1530"/>
+        <stop offset="100%" stop-color="#6b2840"/>
+      </linearGradient>
+      <linearGradient id="glow" x1="0.5" y1="0" x2="0.5" y2="1">
+        <stop offset="0%" stop-color="#c8929a" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#c8929a" stop-opacity="0"/>
+      </linearGradient>
+      <radialGradient id="moon" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#f0d8a8"/>
+        <stop offset="100%" stop-color="#c4954a"/>
+      </radialGradient>
+    </defs>
+    <!-- Sky -->
+    <rect width="1200" height="800" fill="url(#sky)"/>
+    <!-- Stars -->
+    <circle cx="100" cy="80" r="1.2" fill="#f0d8a8" opacity="0.8"/>
+    <circle cx="250" cy="50" r="0.8" fill="#f0d8a8" opacity="0.6"/>
+    <circle cx="400" cy="100" r="1" fill="#f0d8a8" opacity="0.7"/>
+    <circle cx="600" cy="60" r="1.5" fill="#f0d8a8" opacity="0.9"/>
+    <circle cx="750" cy="90" r="0.8" fill="#f0d8a8" opacity="0.5"/>
+    <circle cx="900" cy="40" r="1.2" fill="#f0d8a8" opacity="0.8"/>
+    <circle cx="1050" cy="120" r="1" fill="#f0d8a8" opacity="0.6"/>
+    <circle cx="180" cy="160" r="0.7" fill="#f0d8a8" opacity="0.5"/>
+    <circle cx="1100" cy="70" r="0.9" fill="#f0d8a8" opacity="0.7"/>
+    <circle cx="330" cy="200" r="0.6" fill="#f0d8a8" opacity="0.4"/>
+    <circle cx="820" cy="150" r="1.1" fill="#f0d8a8" opacity="0.6"/>
+    <!-- Moon glow -->
+    <circle cx="600" cy="130" r="80" fill="url(#glow)"/>
+    <!-- Moon -->
+    <circle cx="600" cy="130" r="32" fill="url(#moon)" opacity="0.9"/>
+    <!-- Mountain silhouette left -->
+    <polygon points="0,800 0,480 100,320 200,480 300,380 400,520 500,800" fill="#1a0820" opacity="0.7"/>
+    <!-- Mountain silhouette right -->
+    <polygon points="700,800 800,500 900,350 1000,470 1100,300 1200,430 1200,800" fill="#1a0820" opacity="0.7"/>
+
+    <!-- CANDI / TEMPLE CENTER -->
+    <!-- Base platform -->
+    <rect x="380" y="720" width="440" height="30" fill="#2d1020" rx="2"/>
+    <rect x="400" y="700" width="400" height="24" fill="#3a1530" rx="2"/>
+    <rect x="420" y="680" width="360" height="24" fill="#2d1020" rx="2"/>
+    <!-- Main body -->
+    <rect x="440" y="540" width="320" height="144" fill="#3a1530"/>
+    <rect x="450" y="548" width="300" height="128" fill="#2d1020" rx="1"/>
+    <!-- Decorative niches -->
+    <rect x="470" y="570" width="40" height="60" fill="#1a0820" rx="2"/>
+    <rect x="540" y="570" width="40" height="60" fill="#1a0820" rx="2"/>
+    <rect x="610" y="570" width="40" height="60" fill="#1a0820" rx="2"/>
+    <rect x="680" y="570" width="40" height="60" fill="#1a0820" rx="2"/>
+    <!-- Arch tops on niches -->
+    <ellipse cx="490" cy="572" rx="20" ry="8" fill="#1a0820"/>
+    <ellipse cx="560" cy="572" rx="20" ry="8" fill="#1a0820"/>
+    <ellipse cx="630" cy="572" rx="20" ry="8" fill="#1a0820"/>
+    <ellipse cx="700" cy="572" rx="20" ry="8" fill="#1a0820"/>
+
+    <!-- First tier top -->
+    <rect x="430" y="520" width="340" height="24" fill="#2d1020" rx="1"/>
+    <rect x="450" y="506" width="300" height="18" fill="#3a1530" rx="1"/>
+
+    <!-- Second tier -->
+    <rect x="470" y="420" width="260" height="90" fill="#3a1530"/>
+    <rect x="480" y="428" width="240" height="74" fill="#2d1020"/>
+    <rect x="490" y="436" width="220" height="58" fill="#3a1530" opacity="0.5"/>
+    <!-- Decorative panels -->
+    <rect x="500" y="444" width="50" height="40" fill="#1a0820" rx="2"/>
+    <rect x="575" y="444" width="50" height="40" fill="#1a0820" rx="2"/>
+    <rect x="650" y="444" width="50" height="40" fill="#1a0820" rx="2"/>
+    <rect x="460" y="408" width="280" height="16" fill="#2d1020" rx="1"/>
+    <rect x="474" y="396" width="252" height="16" fill="#3a1530" rx="1"/>
+
+    <!-- Third tier -->
+    <rect x="506" y="330" width="188" height="70" fill="#3a1530"/>
+    <rect x="516" y="338" width="168" height="54" fill="#2d1020"/>
+    <rect x="466" y="318" width="268" height="16" fill="#2d1020" rx="1"/>
+    <rect x="480" y="306" width="240" height="16" fill="#3a1530" rx="1"/>
+
+    <!-- Fourth tier / spire base -->
+    <rect x="530" y="250" width="140" height="60" fill="#3a1530"/>
+    <rect x="540" y="258" width="120" height="44" fill="#2d1020"/>
+    <rect x="518" y="240" width="164" height="14" fill="#2d1020" rx="1"/>
+    <rect x="526" y="228" width="148" height="14" fill="#3a1530" rx="1"/>
+
+    <!-- Spire -->
+    <rect x="562" y="160" width="76" height="72" fill="#3a1530"/>
+    <rect x="570" y="166" width="60" height="58" fill="#2d1020"/>
+    <!-- Spire point -->
+    <polygon points="600,100 580,162 620,162" fill="#3a1530"/>
+    <polygon points="600,108 584,162 616,162" fill="#2d1020"/>
+    <!-- Finial -->
+    <circle cx="600" cy="100" r="6" fill="#c4954a"/>
+    <circle cx="600" cy="94" r="3" fill="#f0d8a8"/>
+
+    <!-- Pink atmospheric glow at horizon -->
+    <rect x="0" y="620" width="1200" height="180" fill="#c8929a" opacity="0.08"/>
+
+    <!-- Decorative torches / lamps left -->
+    <rect x="370" y="680" width="6" height="50" fill="#3a1530"/>
+    <ellipse cx="373" cy="678" rx="10" ry="12" fill="#c4954a" opacity="0.7"/>
+    <ellipse cx="373" cy="678" rx="5" ry="7" fill="#f0d8a8" opacity="0.9"/>
+    <!-- Torches right -->
+    <rect x="824" y="680" width="6" height="50" fill="#3a1530"/>
+    <ellipse cx="827" cy="678" rx="10" ry="12" fill="#c4954a" opacity="0.7"/>
+    <ellipse cx="827" cy="678" rx="5" ry="7" fill="#f0d8a8" opacity="0.9"/>
+
+    <!-- Pink flower petals floating -->
+    <ellipse cx="150" cy="400" rx="8" ry="5" fill="#c8929a" opacity="0.3" transform="rotate(-20,150,400)"/>
+    <ellipse cx="280" cy="520" rx="6" ry="4" fill="#e8b4bc" opacity="0.4" transform="rotate(15,280,520)"/>
+    <ellipse cx="950" cy="350" rx="7" ry="4" fill="#c8929a" opacity="0.35" transform="rotate(-10,950,350)"/>
+    <ellipse cx="1060" cy="480" rx="9" ry="5" fill="#e8b4bc" opacity="0.3" transform="rotate(25,1060,480)"/>
+  </svg>
+
+  <div class="cover-bg"></div>
+
+  <div class="cover-content">
+    <div class="cover-eyebrow">— Undangan Pernikahan —</div>
+    <div class="bismillah-cover">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
+    <div class="cover-divider"></div>
+    <div class="cover-names">
+      VIGRA EKA<br>YONGKI PRAMANA
+      <span class="cover-amp">&</span>
+      NOVIANA FAJARINI
+    </div>
+    <div class="cover-date">Jumat, 18 Juli 2026</div>
+    <div style="color:var(--pink-pale);font-size:13px;margin-top:6px;opacity:0.7;letter-spacing:2px;">08.00 WIB – Selesai</div>
+    <div style="margin-top:20px;color:var(--pink-light);font-size:20px;opacity:0.6;">✦</div>
+  </div>
+
+  <div class="scroll-hint">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    Gulir ke bawah
+  </div>
+</section>
+
+<!-- VERSE -->
+<section class="verse-sec">
+  <div class="arabic-big">وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا</div>
+  <p class="verse-trans">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri supaya kamu cenderung dan merasa tenteram kepadanya."</p>
+  <div class="verse-ref">— QS. Ar-Rum: 21 —</div>
+</section>
+
+<!-- MEMPELAI -->
+<section class="sec fade" id="mempelai">
+  <span class="eyebrow">Kami Yang Berbahagia</span>
+  <h2 class="sec-title">Mempelai</h2>
+  <p class="sec-body">Dengan memohon rahmat dan ridho Allah SWT, kami mengumumkan pernikahan kami dengan penuh rasa syukur dan kebahagiaan yang tiada tara.</p>
+
+  <div class="couple-wrap">
+    <!-- GROOM SVG ILLUSTRATION -->
+    <div class="person">
+      <div class="avatar-ring">
+        <svg width="106" height="106" viewBox="0 0 106 106" xmlns="http://www.w3.org/2000/svg">
+          <!-- BG -->
+          <circle cx="53" cy="53" r="53" fill="#f7ece4"/>
+          <!-- Body / Beskap (Javanese formal attire) -->
+          <rect x="27" y="68" width="52" height="38" fill="#3a1530" rx="4"/>
+          <!-- Collar -->
+          <polygon points="53,68 44,72 53,76 62,72" fill="#c4954a"/>
+          <!-- Blangkon (Javanese headgear) -->
+          <ellipse cx="53" cy="36" rx="20" ry="8" fill="#3a1530"/>
+          <rect x="35" y="32" width="36" height="10" fill="#2d1020" rx="3"/>
+          <!-- Knot on blangkon -->
+          <ellipse cx="53" cy="32" rx="6" ry="4" fill="#c4954a"/>
+          <!-- Face -->
+          <ellipse cx="53" cy="52" rx="17" ry="19" fill="#d4a878"/>
+          <!-- Eyes -->
+          <ellipse cx="46" cy="50" rx="2.5" ry="2.5" fill="#3a1530"/>
+          <ellipse cx="60" cy="50" rx="2.5" ry="2.5" fill="#3a1530"/>
+          <!-- Eyebrows -->
+          <path d="M43 46 Q46 44 49 46" stroke="#3a1530" stroke-width="1.2" fill="none"/>
+          <path d="M57 46 Q60 44 63 46" stroke="#3a1530" stroke-width="1.2" fill="none"/>
+          <!-- Smile -->
+          <path d="M47 57 Q53 62 59 57" stroke="#a07050" stroke-width="1.2" fill="none"/>
+          <!-- Ear -->
+          <ellipse cx="36" cy="52" rx="3" ry="4" fill="#c49060"/>
+          <ellipse cx="70" cy="52" rx="3" ry="4" fill="#c49060"/>
+          <!-- Gold button -->
+          <circle cx="53" cy="74" r="2.5" fill="#c4954a"/>
+          <circle cx="53" cy="81" r="2.5" fill="#c4954a"/>
+        </svg>
+      </div>
+      <span class="person-name">VIGRA EKA<br>YONGKI PRAMANA</span>
+      <div class="person-parent">Putra dari<br>Bapak Suhartopo<br>&amp; Ibu Siti Asiyah</div>
+    </div>
+
+    <div class="center-amp">&</div>
+
+    <!-- BRIDE SVG ILLUSTRATION -->
+    <div class="person">
+      <div class="avatar-ring">
+        <svg width="106" height="106" viewBox="0 0 106 106" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="53" cy="53" r="53" fill="#fdf0f2"/>
+          <!-- Kebaya body -->
+          <rect x="26" y="68" width="54" height="38" fill="#c8929a" rx="4"/>
+          <!-- Kebaya decorative edge -->
+          <path d="M26 68 Q53 62 80 68" stroke="#e8b4bc" stroke-width="1.5" fill="none"/>
+          <!-- Brooch -->
+          <circle cx="53" cy="72" r="4" fill="#c4954a"/>
+          <circle cx="53" cy="72" r="2" fill="#f0d8a8"/>
+          <!-- Sanggul (Javanese bun) -->
+          <ellipse cx="53" cy="26" rx="16" ry="10" fill="#3a1530"/>
+          <ellipse cx="53" cy="22" rx="10" ry="6" fill="#2d1020"/>
+          <!-- Hair accessories -->
+          <circle cx="42" cy="24" r="3" fill="#c4954a"/>
+          <circle cx="64" cy="24" r="3" fill="#c4954a"/>
+          <circle cx="53" cy="19" r="2.5" fill="#f0d8a8"/>
+          <!-- Flower in hair -->
+          <circle cx="66" cy="28" r="4" fill="#e8b4bc"/>
+          <circle cx="66" cy="28" r="2" fill="#f5dce0"/>
+          <!-- Face -->
+          <ellipse cx="53" cy="50" rx="16" ry="18" fill="#d4a878"/>
+          <!-- Kerudung / No - open face for formal traditional -->
+          <!-- Eyes -->
+          <ellipse cx="47" cy="48" rx="2.2" ry="2.5" fill="#3a1530"/>
+          <ellipse cx="59" cy="48" rx="2.2" ry="2.5" fill="#3a1530"/>
+          <!-- Eye shadow -->
+          <ellipse cx="47" cy="47" rx="4" ry="2" fill="#c8929a" opacity="0.3"/>
+          <ellipse cx="59" cy="47" rx="4" ry="2" fill="#c8929a" opacity="0.3"/>
+          <!-- Eyebrows -->
+          <path d="M44 44 Q47 42 50 44" stroke="#3a1530" stroke-width="1.1" fill="none"/>
+          <path d="M56 44 Q59 42 62 44" stroke="#3a1530" stroke-width="1.1" fill="none"/>
+          <!-- Nose -->
+          <path d="M51 52 Q53 55 55 52" stroke="#b08060" stroke-width="0.8" fill="none"/>
+          <!-- Lips -->
+          <path d="M48 57 Q53 60.5 58 57" stroke="#c8929a" stroke-width="1.5" fill="#e8b4bc" fill-opacity="0.6"/>
+          <!-- Ears -->
+          <ellipse cx="37" cy="50" rx="3" ry="4" fill="#c49060"/>
+          <ellipse cx="69" cy="50" rx="3" ry="4" fill="#c49060"/>
+          <!-- Earrings -->
+          <circle cx="37" cy="54" r="2" fill="#c4954a"/>
+          <circle cx="69" cy="54" r="2" fill="#c4954a"/>
+        </svg>
+      </div>
+      <span class="person-name">NOVIANA<br>FAJARINI</span>
+      <div class="person-parent">Putri dari<br>Bapak Alm. Agung Riyadi<br>&amp; Ibu Suwartiningsih</div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ACARA -->
+<section class="sec fade" id="acara">
+  <span class="eyebrow">Rangkaian Acara</span>
+  <h2 class="sec-title">Hari Pernikahan</h2>
+  <p class="sec-body">Dengan segenap hati kami mengundang Bapak/Ibu/Saudara/i untuk hadir menyaksikan dan memberikan doa restu dalam momen sakral ini.</p>
+
+  <div class="events">
+    <div class="ecard">
+      <span class="etype">Prosesi Pertama</span>
+      <div class="ename">Akad Nikah</div>
+      <div class="erow">
+        <span class="eicon">◷</span>
+        <div class="etext"><strong>08.00 WIB</strong>Prosesi Ijab Kabul</div>
+      </div>
+      <div class="erow">
+        <span class="eicon">◈</span>
+        <div class="etext"><strong>Jumat, 18 Juli 2026</strong>13 Muharram 1448 H</div>
+      </div>
+    </div>
+
+    <div class="ecard">
+      <span class="etype">Prosesi Kedua</span>
+      <div class="ename">Resepsi</div>
+      <div class="erow">
+        <span class="eicon">◷</span>
+        <div class="etext"><strong>Setelah Akad – Selesai</strong>Pesta Pernikahan</div>
+      </div>
+      <div class="erow">
+        <span class="eicon">◈</span>
+        <div class="etext"><strong>Jumat, 18 Juli 2026</strong>Kediaman Mempelai Wanita</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COUNTDOWN -->
+<section class="countdown-sec fade">
+  <div style="max-width:680px;margin:0 auto;text-align:center;">
+    <span class="eyebrow">Hitung Mundur</span>
+    <h2 class="sec-title" style="color:var(--brown);">Menuju Hari Bahagia</h2>
+    <div class="count-grid">
+      <div class="cbox"><span class="cnum" id="days">--</span><span class="clbl">Hari</span></div>
+      <div class="cbox"><span class="cnum" id="hours">--</span><span class="clbl">Jam</span></div>
+      <div class="cbox"><span class="cnum" id="minutes">--</span><span class="clbl">Menit</span></div>
+      <div class="cbox"><span class="cnum" id="seconds">--</span><span class="clbl">Detik</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- LOKASI -->
+<section class="loc-sec fade" id="lokasi">
+  <span class="eyebrow">Lokasi Acara</span>
+  <h2 class="sec-title">Kediaman Mempelai Wanita</h2>
+  <p class="sec-body" style="max-width:500px;margin:0 auto;">Kami dengan penuh kebahagiaan menanti kehadiran Bapak/Ibu/Saudara/i di kediaman mempelai wanita.</p>
+
+  <div class="address-box">
+    <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--pink-deep);margin-bottom:8px;">Alamat Lengkap</div>
+    <div style="font-size:16px;color:var(--brown);font-weight:500;">Kediaman Mempelai Wanita</div>
+    <div style="margin-top:6px;font-size:15px;color:var(--text2);">Jl. Cempaka, RT 01 RW 01<br>Desa Tanjung Sepreh, Kec. Maospati<br>Kab. Magetan, Jawa Timur</div>
+  </div>
+
+  <a class="map-btn" href="https://maps.app.goo.gl/9G8XdQJ8WcLJUJ69A" target="_blank" rel="noopener">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#c8929a" stroke-width="1.2">
+      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+      <circle cx="12" cy="9" r="2.5"/>
+    </svg>
+    <span style="font-size:13px;color:var(--text3);letter-spacing:1px;">Klik untuk membuka peta</span>
+  </a>
+
+  <a href="https://maps.app.goo.gl/9G8XdQJ8WcLJUJ69A" target="_blank" rel="noopener" class="btn-main">
+    Buka di Google Maps
+  </a>
+</section>
+
+<hr class="sep">
+
+<!-- UCAPAN & RSVP -->
+<section class="rsvp-sec fade" id="ucapan">
+  <span class="eyebrow" style="color:var(--pink-light);">Doa & Ucapan</span>
+  <h2 class="sec-title">Kirim Ucapan &amp; Konfirmasi</h2>
+  <p class="sec-body">Doa dan restu Anda adalah hadiah terindah bagi kami. Mohon konfirmasikan kehadiran Anda.</p>
+
+  <div class="rform">
+    <input class="rinput" id="rname" type="text" placeholder="Nama Anda" maxlength="80">
+    <select class="rsel" id="rattend">
+      <option value="">— Konfirmasi Kehadiran —</option>
+      <option value="hadir">Insya Allah Hadir</option>
+      <option value="tidak">Berhalangan Hadir</option>
+    </select>
+    <textarea class="rinput" id="rwish" rows="3" placeholder="Ucapan & doa untuk kedua mempelai..." style="resize:none;"></textarea>
+    <button class="btn-main" onclick="submitRsvp()" style="font-size:12px;">Kirim Ucapan ✦</button>
+    <div class="rsuccess" id="rsuccess">
+      Jazakallahu khairan atas doa dan ucapan Anda 🤍<br>Kehadiran Anda sangat kami nantikan.
+    </div>
+  </div>
+
+  <div class="wishes" id="wishes-list"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="font-family:'Playfair Display',serif;font-size:17px;font-style:italic;letter-spacing:1px;color:var(--pink-light);margin-bottom:8px;">
+    Vigra Eka Yongki Pramana &amp; Noviana Fajarini
+  </div>
+  Jumat, 18 Juli 2026 &nbsp;·&nbsp; 08.00 WIB – Selesai
+  <div style="margin-top:10px;opacity:0.5;font-size:10px;">Kediaman Mempelai Wanita · Kab. Magetan</div>
+</footer>
+
+<!-- MUSIC BTN -->
+<button class="music-btn" id="mbtn" onclick="toggleMusic()" title="Gamelan Jawa">♪</button>
+
+<!-- Gamelan Jawa - Gending Jawa (Internet Archive, royalty-free) -->
+<audio id="bgm" loop>
+  <source src="https://archive.org/download/BalineseGamelanInUbudPalace/Gamelan%20Javanese%20Music%20Gending%20Jawa.mp3" type="audio/mp3">
+</audio>
+
+<script>
+// Gate open
+function openInvite(){
+  const g = document.getElementById('gate');
+  g.classList.add('opening');
+  setTimeout(()=>{g.style.display='none';}, 800);
+  setTimeout(()=>{
+    try{document.getElementById('bgm').play();}catch(e){}
+  }, 900);
+}
+
+// Nav show
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('show', window.scrollY > window.innerHeight * 0.85);
+});
+
+// Fade observer
+const obs = new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting) e.target.classList.add('in');});
+},{threshold:0.12});
+document.querySelectorAll('.fade').forEach(el=>obs.observe(el));
+
+// Countdown
+function tick(){
+  const target = new Date('2026-07-18T08:00:00');
+  const now = new Date();
+  const diff = target - now;
+  if(diff<=0){
+    ['days','hours','minutes','seconds'].forEach(id=>document.getElementById(id).textContent='00');
+    return;
+  }
+  const d=Math.floor(diff/86400000);
+  const h=Math.floor((diff%86400000)/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  const s=Math.floor((diff%60000)/1000);
+  document.getElementById('days').textContent=String(d).padStart(2,'0');
+  document.getElementById('hours').textContent=String(h).padStart(2,'0');
+  document.getElementById('minutes').textContent=String(m).padStart(2,'0');
+  document.getElementById('seconds').textContent=String(s).padStart(2,'0');
+}
+tick(); setInterval(tick,1000);
+
+// Music toggle
+let playing=false;
+function toggleMusic(){
+  const a=document.getElementById('bgm');
+  const b=document.getElementById('mbtn');
+  if(playing){a.pause();b.style.opacity='0.55';playing=false;}
+  else{a.play().catch(()=>{});b.style.opacity='1';playing=true;}
+}
+
+// RSVP
+const wishes=[];
+function submitRsvp(){
+  const name=document.getElementById('rname').value.trim();
+  const attend=document.getElementById('rattend').value;
+  const wish=document.getElementById('rwish').value.trim();
+  if(!name){document.getElementById('rname').focus();return;}
+  if(!attend){document.getElementById('rattend').focus();return;}
+  if(wish) wishes.unshift({name,wish,attend});
+  renderWishes();
+  const ok=document.getElementById('rsuccess');
+  ok.style.display='block';
+  document.getElementById('rname').value='';
+  document.getElementById('rattend').value='';
+  document.getElementById('rwish').value='';
+  setTimeout(()=>{ok.style.display='none';},5000);
+}
+function renderWishes(){
+  document.getElementById('wishes-list').innerHTML=wishes.map(w=>`
+    <div class="witem">
+      <span class="wname">${w.name} · ${w.attend==='hadir'?'Hadir':'Berhalangan'}</span>
+      ${w.wish}
+    </div>`).join('');
+}
+// Seed wishes
+[
+  {name:'Keluarga Besar',wish:'Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Barakallahu lakuma wa baraka alaikuma.',attend:'hadir'},
+  {name:'Sahabat & Kerabat',wish:'Selamat menempuh hidup baru! Semoga bahagia dunia dan akhirat.',attend:'hadir'},
+].forEach(w=>wishes.push(w));
+renderWishes();
+</script>
+</body>
+</html>
